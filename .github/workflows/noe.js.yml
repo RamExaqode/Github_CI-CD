@@ -1,55 +1,37 @@
-name: Playwright Tests
+name: Send Email with Artifact
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+  workflow_run:
+    workflows: ["Biosero Automation Test"]
+    types:
+      - completed
 
 jobs:
-  test:
-    timeout-minutes: 60
+  send_email:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v4
         with:
-          node-version: 18
+          workflow: Automation.yml
+          name: playwright-report
+          run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Unzip artifact
+        run: unzip playwright-report.zip -d playwright-report/
 
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      - name: Install Allure Reporter
-        run: npm install -D allure-commandline
-
-      - name: Run Playwright Tests with Allure Reporter
-        run: npx playwright test --reporter=line,allure-playwright
-
-      - name: Generate Allure Report
-        run: npx allure generate --clean -o allure-report
-
-      - name: Compress Allure Report
-        run: zip -r allure-report.zip allure-report
-
-      - name: Upload Allure Report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: allure-report
-          path: allure-report.zip
-          retention-days: 30
-
-      - name: Send Email with Allure Report
+      - name: Send email
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          username: ${{ secrets.EMAIL_USERNAME }}
-          password: ${{ secrets.EMAIL_PASSWORD }}
+          username: ram.marshivane@exaqode.com
+          password: mrte azhy rele wcxb # Use your app-specific password directly here
           subject: 'Playwright Allure Report'
           body: 'Please find the attached Allure report.'
-          to: rammarshivane@gmail.com
-          from: ram.marshivane@exaqode.com
-          attachments: allure-report.zip
+          to: 'rammarshivane@gmail.com'
+          from: 'ram.marshivane@exaqode.com'
+          attachments: 'playwright-report.zip'
