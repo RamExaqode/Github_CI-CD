@@ -16,7 +16,7 @@ module.exports = defineConfig({
     screenshot: 'only-on-failure',
     video: 'on',
     trace: 'on',
-    headless: true,
+    headless: false,
     testTimeout: 60000,
     launchOptions: {
       args: [
