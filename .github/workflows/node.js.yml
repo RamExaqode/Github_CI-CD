@@ -21,18 +21,17 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      - name: Install Allure Report
+      - name: Install Allure Reporter
         run: npm install -D allure-commandline
-        
+
       - name: Run Playwright Tests with Allure Reporter
         run: npx playwright test --reporter=line,allure-playwright
 
       - name: Generate Allure Report
-        run: |
-          npx allure generate --clean
-          npx allure open
+        run: npx allure generate --clean -o allure-report
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: allure-report
