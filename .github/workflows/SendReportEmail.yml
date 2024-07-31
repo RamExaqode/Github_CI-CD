@@ -1,0 +1,32 @@
+name: Send Email with Artifact
+on:
+  workflow_run:
+    workflows: ["Biosero Automation Test"]
+    types:
+      - completed
+jobs:
+  send_email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v4
+        with:
+          workflow: Automation.yml
+          name: playwright-report
+      - name: Unzip artifact
+        run: unzip -r playwright-report.zip -d playwright-report/
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3
+        with:
+           server_address: smtp.gmail.com
+           server_port: 587
+           username: ${{ secrets.EMAIL_USERNAME}}
+           password: ${{ secrets.EMAIL_PASSWORD}}
+           subject: 'Test automation report for test execution'
+           to: 'alejandrovelazquezvalenzuela@gmail.com'
+           from: 'AlejandroVelazquez@biosero.com'
+           body: 'Hey this is a test please omit answer me, I am sendig the test report'
+           attachments: 'playwright-report/**.html'

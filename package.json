@@ -9,7 +9,7 @@
   "devDependencies": {
     "@playwright/test": "^1.30.0",
     "@types/node": "^20.14.2",
-    "allure-playwright": "^2.0.0",
+    "allure-playwright": "^2.15.1",
     "rimraf": "^3.0.2"
   }
 }
