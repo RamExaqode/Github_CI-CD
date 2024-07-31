@@ -1,7 +1,7 @@
 name: Send Email with Artifact
 on:
   workflow_run:
-    workflows: ["Biosero Automation Test"]
+    workflows: ["Automation Test"]
     types:
       - completed
 
