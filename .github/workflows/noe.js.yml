@@ -1,0 +1,37 @@
+name: Send Email with Artifact
+on:
+  workflow_run:
+    workflows: ["Automation Test"]
+    types:
+      - completed
+
+jobs:
+  send_email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v4
+        with:
+          workflow: Automation.yml
+          name: playwright-report
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Unzip artifact
+        run: unzip playwright-report.zip -d playwright-report/
+
+      - name: Send email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ram.marshivane@exaqode.com
+          password: mrte azhy rele wcxb # Use your app-specific password directly here
+          subject: 'Playwright Allure Report'
+          body: 'Please find the attached Allure report.'
+          to: 'rammarshivane@gmail.com'
+          from: 'ram.marshivane@exaqode.com'
+          attachments: 'playwright-report.zip'
