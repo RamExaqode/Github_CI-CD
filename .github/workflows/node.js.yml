@@ -1,56 +1,27 @@
 name: Playwright Tests
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
   pull_request:
-    branches: [main, master]
-
+    branches: [ main, master ]
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      - name: Install Allure Reporter
-        run: npm install -D allure-commandline
-
-      - name: Run Playwright Tests with Allure Reporter
-        run: npx playwright test --reporter=line,allure-playwright
-
-      - name: Generate Allure Report
-        run: npx allure generate --clean -o allure-report
-
-      - name: Zip Allure Report
-        run: zip -r allure-report.zip allure-report
-
-      - name: Upload Allure Report
-        uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: allure-report
-          path: allure-report.zip
-          retention-days: 30
-
-      - name: Send Test Report via Email
-        uses: docker://mendhak/send-email
-        with:
-          server_address: ${{ secrets.SMTP_SERVER }}
-          server_port: ${{ secrets.SMTP_PORT }}
-          from: 'ram.marshivane@exaqode.com'
-          to: 'rammarshivane@gmail.com'
-          subject: 'Test Report'
-          body: 'Please find the attached test report.'
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
-          attachments: allure-report.zip
-          ignorecert: true  # Optional, but helpful if your SMTP server has a self-signed certificate
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: npx playwright test
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
