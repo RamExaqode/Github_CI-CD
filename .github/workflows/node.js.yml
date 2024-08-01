@@ -42,15 +42,15 @@ jobs:
           retention-days: 30
 
       - name: Send Test Report via Email
-        uses: mikeal/sendmail@v1.8.0
+        uses: docker://mendhak/send-email
         with:
           server_address: ${{ secrets.SMTP_SERVER }}
           server_port: ${{ secrets.SMTP_PORT }}
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
+          from: 'ram.marshivane@exaqode.com'
+          to: 'rammarshivane@gmail.com'
           subject: 'Test Report'
           body: 'Please find the attached test report.'
-          to: 'rammarshivane@gmail.com'
-          from: 'ram.marshivane@exaqode.com'
-          content_type: 'text/html'
-          attachments: 'allure-report.zip'
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          attachments: allure-report.zip
+          ignorecert: true  # Optional, but helpful if your SMTP server has a self-signed certificate
