@@ -30,6 +30,9 @@ jobs:
       - name: Generate Allure Report
         run: npx allure generate --clean -o allure-report
 
+      - name: Zip Allure Report
+        run: zip -r allure-report.zip allure-report
+
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
@@ -40,7 +43,7 @@ jobs:
 
       - name: Send Test Report via Email
         uses: mikeal/sendmail@v1.8.0
-         with:
+        with:
           server_address: ${{ secrets.SMTP_SERVER }}
           server_port: ${{ secrets.SMTP_PORT }}
           username: ${{ secrets.SMTP_USERNAME }}
@@ -50,4 +53,4 @@ jobs:
           to: 'rammarshivane@gmail.com'
           from: 'ram.marshivane@exaqode.com'
           content_type: 'text/html'
-          attachments: './src/${{ env.LIB_NAME }}/TestResults/test_results.trx'
+          attachments: 'allure-report.zip'
