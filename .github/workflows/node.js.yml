@@ -37,3 +37,17 @@ jobs:
           name: allure-report
           path: allure-report/
           retention-days: 30
+
+      - name: Send Test Report via Email
+        uses: mikeal/sendmail@v1.8.0
+         with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: 'Test Report'
+          body: 'Please find the attached test report.'
+          to: 'rammarshivane@gmail.com'
+          from: 'ram.marshivane@exaqode.com'
+          content_type: 'text/html'
+          attachments: './src/${{ env.LIB_NAME }}/TestResults/test_results.trx'
