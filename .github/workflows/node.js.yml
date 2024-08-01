@@ -35,7 +35,7 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: allure-report
-          path: allure-report/
+          path: allure-report.zip
           retention-days: 30
 
       - name: Send Test Report via Email
