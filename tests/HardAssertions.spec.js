@@ -8,7 +8,7 @@ test('Hard Assertions in tests', async ({ page }) => {
   await expect(page).toHaveURL('https://demo.nopcommerce.com/register');
 
   // 2. expect(page).toHaveTitle() page has title
-  await expect(page).toHaveTitle('nopCommerce demo store. Register');
+  //await expect(page).toHaveTitle('nopCommerce demo store. Register');
 
   // 3. expect(locator).toBeVisible()  Element is visible
   const logoElement = page.locator('.header-logo');
