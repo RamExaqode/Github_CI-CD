@@ -2,7 +2,7 @@
 const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
-  testDir: './tests',
+  testDir: './src/tests',
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -17,7 +17,7 @@ module.exports = defineConfig({
     video: 'on',
     trace: 'on',
     headless: true,
-    testTimeout: 60000,
+    testTimeout: 3000,
     launchOptions: {
       args: [
         '--no-sandbox',
